@@ -26,15 +26,14 @@ The kernal path for testing vm initialization is 'bzImage-qemux86.bin' when insi
 10. `git checkout -b os2` - checkout a new branch that will serve as our base branch for future homework assignments.
 11. `cp /scratch/files/config-3.19.2-yocto-standard .config` - copy the provided config file into the source tree.
 12. `make menuconfig` - opens menuconfig window for the project. Go into general settings and then change 'Local Version' to '-group32-hw1', save to '.config' then exit.
-13. `git add .config` - add the new .config file to the branch so future branches have it by default.
-14. `git commit -m "added class config file"` - commit changes to the os2 branch.
 
 ### Setup Kernel (for new assignment)
 1.  Login to the os2 server.
 2.  `cd /scratch/spring2018/32/linux-yocto-3.19/` - change into group folder's instance of the kernel repo.
 3.  `git checkout os2` - checkout our base v3.19.2 tag branch.
 4.  `git checkout -b hw#` - create a new branch from the os2 base brach named hw# (where # is the homework assignment number).
-12. `make menuconfig` - opens menuconfig window for the project. Go into general settings and then change 'Local Version' to '-group32-hw#' (where # is the same homework assignment number from above), save to '.config' then exit.
+5.  `cp /scratch/files/config-3.19.2-yocto-standard .config` - copy the provided config file into the source tree.
+6.  `make menuconfig` - opens menuconfig window for the project. Go into general settings and then change 'Local Version' to '-group32-hw#' (where # is the same homework assignment number from above), save to '.config' then exit.
 
 ### Build Kernal
 1.  Login to the os2 server. Two terminals are perfered.

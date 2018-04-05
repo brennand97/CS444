@@ -6,7 +6,10 @@
 ## Qemu Command
 
 ``` bash
-qemu-system-i386 -gdb tcp::5532 -S -nographic -kernel <kernal_path> -drive file=core-image-lsb-sdk-qemux86.ext4,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+qemu-system-i386 -gdb tcp::5532 -S -nographic -kernel <kernal_path> \
+                 -drive file=core-image-lsb-sdk-qemux86.ext4,if=virtio \
+                 -enable-kvm -net none -usb -localtime --no-reboot --append \
+                 "root=/dev/vda rw console=ttyS0 debug"
 ```
 
 The kernal path for testing vm initialization is 'bzImage-qemux86.bin' when inside of our folder.  Otherwise, when building the kernal the binary will be located at '?'.

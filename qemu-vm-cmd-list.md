@@ -1,7 +1,7 @@
 ## Group Info
-* Group Numebr: 32
-* Port: 5500 + 32 = 5532
-* OS2 Folder: /scratch/spring2018/32/
+* Group Numebr: _32_
+* Port: 5500 + 32 = _5532_
+* OS2 Folder: _/scratch/spring2018/32/_
 
 ## Qemu Command
 

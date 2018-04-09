@@ -1,9 +1,11 @@
 CC=gcc
 CFLAGS=-Wall -g -lpthread
 
-all: src/main.c
-	$(CC) $(CFLAGS) -o out/main src/main.c
+all: src/main.c src/buffer.c
+	$(CC) $(CFLAGS) -o out/buffer.o -c src/buffer.c
+	$(CC) $(CFLAGS) -o out/main.o -c src/main.c
+	$(CC) $(CFLAGS) -o out/main out/buffer.o out/main.o
 
 clean:
-	-rm -f out/main
+	-rm -f out/*
 

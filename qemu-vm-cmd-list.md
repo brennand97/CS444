@@ -12,7 +12,7 @@ qemu-system-i386 -gdb tcp::5532 -S -nographic -kernel <kernal_path> \
                  "root=/dev/vda rw console=ttyS0 debug"
 ```
 
-The kernal path for testing vm initialization is 'bzImage-qemux86.bin' when inside of our folder.  Otherwise, when building the kernal the binary will be located at '?'.
+The kernal path for testing vm initialization is 'bzImage-qemux86.bin' when inside of our folder.  Otherwise, when building the kernal the binary will be located at 'linux-yocto-3.19/arch/x86/boot/bzImage'.
 
 ## HW1 Command List
 

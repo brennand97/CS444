@@ -9,33 +9,50 @@
 
 typedef struct message message;
 
+/* Return a random integer from min to max */
 int randomRange(int min, int max) {
 	return rand() % (max + 1 - min) + min;
 }
 
+/* Producer thread function */
 void *producer(void *arg) {
+	/* Convert void argument to buffer type */
 	struct buffer* buffer = (struct buffer*) arg;
 
+	/* Produce items forever */
 	while(1) {
+		/* Create message */
 		message msg = { .wait = randomRange(2, 9), .show = randomRange(0,100) };
+		
+		/* While the buffer is full sleep, then add message */
 		while(putBuffer(msg, buffer)) {
+			/* Sleep for a second before trying to add message again */
 			sleep(1);
 		}
+
+		/* Sleep a random amount of time from 3 to 7 */
 		sleep(randomRange(3, 7));
 	}
 
 	return NULL;
 }
 
-void *consumer(void *arg) {
+/* Consumer thread function */
+void *consumer(void *arg) {	
+	/* Convert void argument to buffer type */
 	struct buffer* buffer = (struct buffer*) arg;
 
+	/* Consume items forever */
 	while(1) {
+		/* Create mesage object for retrieval and retrieve from buffer */
 		message msg;
 		int result = popBuffer(&msg, buffer);
+
 		if (result != 0) {
+			/* If the buffer is full sleep for a second then try again */
 			sleep(1);
 		} else {
+			/* Sleep for the wait period of the message then show the show value */
 			sleep(msg.wait);
 			printf("%d\n", msg.show);
 		}
@@ -48,6 +65,7 @@ void *consumer(void *arg) {
 int main(void) {
 	srand(time(NULL));
 	
+	/* Initialize the buffer */
 	struct buffer* buffer = (struct buffer*) malloc(sizeof(struct buffer));
 	if(initBuffer(buffer)) {
 		fprintf(stderr, "Error: failed to initialize buffer.\n");
@@ -80,6 +98,7 @@ int main(void) {
 		return 5;
 	}
 
+	/* Celan up the buffer */
 	destroyBuffer(buffer);
 	free(buffer);
 	return 0;

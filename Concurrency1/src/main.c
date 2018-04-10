@@ -97,10 +97,12 @@ int main(int argc, char* argv[]) {
 		return 3;
 	}
 
-	/* Join consumer thread */
-	if(pthread_join(c_thread, NULL)) {
-		fprintf(stderr, "Error: failed to join consumer thread.\n");
-		return 4;
+	/* Join consumer threads */
+	for (i = 0; i < c_count; i++) {
+		if(pthread_join(c_thread, NULL)) {
+			fprintf(stderr, "Error: failed to join consumer thread.\n");
+			return 4;
+		}
 	}
 
 	/* Join producer thread */

@@ -62,8 +62,16 @@ void *consumer(void *arg) {
 }
 
 /* Main function */
-int main(void) {
+int main(int argc, char* argv[]) {
 	srand(time(NULL));
+
+	int c_count;
+	if (argc != 2) {
+		printf("Syntax: %s <consumer count>\n", argv[0]);
+		return 666;
+	} else {
+		c_count = atoi(argv[1]);
+	}
 	
 	/* Initialize the buffer */
 	struct buffer* buffer = (struct buffer*) malloc(sizeof(struct buffer));
@@ -72,12 +80,15 @@ int main(void) {
 		return 1;
 	}
 
-	pthread_t c_thread, p_thread;
+	pthread_t c_thread[c_count], p_thread;
 
-	/* Create consumer thread */
-	if(pthread_create(&c_thread, NULL, consumer, buffer)) {
-		fprintf(stderr, "Error: failed to create consumer thread.\n");
-		return 2;
+	/* Create consumer threads */
+	int i;
+	for (i = 0; i < c_count; i++) {
+		if(pthread_create(&c_thread[i], NULL, consumer, buffer)) {
+			fprintf(stderr, "Error: failed to create consumer thread #%d.\n", i);
+			return 2;
+		}
 	}
 
 	/* Create producer thread */

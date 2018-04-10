@@ -1,0 +1,77 @@
+\documentclass[onecolumn, draftclsnofoot,10pt, compsoc]{IEEEtran}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{titling}
+\usepackage{listings}
+
+\usepackage{geometry}
+\geometry{textheight=9.5in, textwidth=7in}
+
+\renewcommand{\lstlistingname}{Code}
+
+\title{Homework Assignment 1\\\large CS444 Spring 2018}
+\author{Brennan Douglas, Cooper Hutchins, Nicholas Giles}
+\date{\today}
+
+
+\begin{document}
+\begin{titlingpage}
+			\maketitle
+      \begin{abstract}
+			\noindent Homework 1 requires the building and running of the yoco linux kernal in a qemu vm.  Then the solving of a concurrency problem using C and hardware level random number access.
+      \end{abstract}
+\end{titlingpage}
+
+\newpage
+\pagenumbering{arabic}
+
+\clearpage
+\singlespace
+
+
+% Document body
+
+\section{Command List}
+
+This is the command list for setting up our directory on the server, building the kernel, and running the QEMU VM.
+
+\begin{enumerate}
+    \item mkdir /scratch/spring2018/32
+    \item cd /scratch/spring2018/32
+    \item cp /scratch/opt/poky/1.8/environment-setup-i586-poky-linux .
+    \item cp /scratch/files/bzImage-qemux86.bin .
+    \item cp /scratch/files/core-image-lsb-sdk-qemux86.ext4 .
+    \item source environment-setup-i586-poky-linux
+    \item git clone --branch v3.19.2 git://git.yoctoproject.org/linux-yocto-3.19
+    \item cd linux-yocto-3.19/
+    \item git checkout -b os2
+    \item cp /scratch/files/config-3.19.2-yocto-standard .config
+    \item make menuconfig \newline \indent Local Version (under General Settings) was changed to '-groupg32-hw1'.
+    \item make -j4 all
+    \item cd ..
+    \item qemu-system-i386 -gdb tcp::5532 -S -nographic -kernel linux-yocto-3.19/arch/x86/boot/bzImage -drive file=core-image-lsb-sdk-qemux86.ext4,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug"
+    
+    \vspace{3mm}
+    \emph{In new terminal:}
+    
+    \item gdb -tui
+    \item target remote:5532
+    \item continue
+    
+    \vspace{3mm}
+    \emph{In pervious terminal:}
+    
+    \item root \newline This username was entered when prompted.
+    \item uname -a
+    \item reboot
+\end{enumerate}
+
+
+% References
+%\cite[Sec 3.8]{freebsd}
+%\bibliographystyle{plain}
+\bibliographystyle{IEEEtran}
+\bibliography{./ref}
+
+\end{document}

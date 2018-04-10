@@ -11,6 +11,7 @@
 int initBuffer(struct buffer* b) {
 	b->head = NULL;
 	b->tail = NULL;
+	b->size = 0;
 	
 	if (pthread_mutex_init(&b->lock, NULL) != 0)
     {
@@ -38,9 +39,15 @@ void destroyBuffer(struct buffer* b) {
 }
 
 // Put message in buffer
-void putBuffer(struct message msg, struct buffer* b) {
+int putBuffer(struct message msg, struct buffer* b) {
 	// Lock the buffer mutex
 	pthread_mutex_lock(&b->lock);
+
+	if (b->size >= MAX_COUNT) {
+		// Unlock the buffer mutex
+		pthread_mutex_unlock(&b->lock);
+		return 1;
+	}
 
 	struct buffer_element* n = (struct buffer_element*) malloc(sizeof(struct buffer_element));
 	n->next = NULL;
@@ -54,8 +61,12 @@ void putBuffer(struct message msg, struct buffer* b) {
 		b->tail       = n;
 	}
 	
+	b->size++;
+
 	// Unlock the buffer mutex
 	pthread_mutex_unlock(&b->lock);
+	
+	return 0;
 }
 
 // Pop message off buffer
@@ -74,6 +85,8 @@ int popBuffer(struct message* msg, struct buffer* b) {
 	b->head = head->next;
 	if (head->next == NULL) { b->tail == NULL; }
 	free(head);
+
+	b->size--;
 
 	// Unlock the buffer mutex
 	pthread_mutex_unlock(&b->lock);

@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
 
 	/* Join consumer threads */
 	for (i = 0; i < c_count; i++) {
-		if(pthread_join(c_thread, NULL)) {
+		if(pthread_join(c_thread[i], NULL)) {
 			fprintf(stderr, "Error: failed to join consumer thread.\n");
 			return 4;
 		}

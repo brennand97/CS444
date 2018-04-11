@@ -51,25 +51,32 @@ void *consumer(void *arg) {
 /* Main function */
 int main(int argc, char* argv[]) {
 
-	int c_count;
-	if (argc != 2) {
-		printf("Syntax: %s <consumer count>\n", argv[0]);
+	int c_count, p_count;
+	int i;
+	struct buffer* buffer;
+	
+	if (argc < 2 || argc > 3) {
+		printf("Syntax: %s <consumer count> [producer count]\n", argv[0]);
 		return 666;
 	} else {
 		c_count = atoi(argv[1]);
+		if (argc == 3) {
+			p_count = atoi(argv[2]);
+		} else {
+			p_count = 1;
+		}
 	}
 	
 	/* Initialize the buffer */
-	struct buffer* buffer = (struct buffer*) malloc(sizeof(struct buffer));
+	buffer = (struct buffer*) malloc(sizeof(struct buffer));
 	if(initBuffer(buffer)) {
 		fprintf(stderr, "Error: failed to initialize buffer.\n");
 		return 1;
 	}
 
-	pthread_t c_thread[c_count], p_thread;
+	pthread_t c_thread[c_count], p_thread[p_count];
 
 	/* Create consumer threads */
-	int i;
 	for (i = 0; i < c_count; i++) {
 		if(pthread_create(&c_thread[i], NULL, consumer, buffer)) {
 			fprintf(stderr, "Error: failed to create consumer thread #%d.\n", i);
@@ -77,10 +84,12 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	/* Create producer thread */
-	if(pthread_create(&p_thread, NULL, producer, buffer)) {
-		fprintf(stderr, "Error: failed to create producer thread.\n");
-		return 3;
+	/* Create producer threads */
+	for (i = 0; i < p_count; i++) {
+		if(pthread_create(&p_thread[i], NULL, producer, buffer)) {
+			fprintf(stderr, "Error: failed to create producer thread #%d.\n", i);
+			return 3;
+		}
 	}
 
 	/* Join consumer threads */
@@ -91,10 +100,12 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	/* Join producer thread */
-	if(pthread_join(p_thread, NULL)) {
-		fprintf(stderr, "Error: failed to join producer thread.\n");
-		return 5;
+	/* Join producer threads */
+	for (i = 0; i < p_count; i++) {
+		if(pthread_join(p_thread[i], NULL)) {
+			fprintf(stderr, "Error: failed to join producer thread.\n");
+			return 5;
+		}
 	}
 
 	/* Celan up the buffer */

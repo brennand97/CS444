@@ -10,11 +10,6 @@
 
 typedef struct message message;
 
-/* Return a random integer from min to max */
-int randomRange(int min, int max) {
-	return rand() % (max + 1 - min) + min;
-}
-
 /* Producer thread function */
 void *producer(void *arg) {
 	/* Convert void argument to buffer type */
@@ -24,12 +19,7 @@ void *producer(void *arg) {
 	while(1) {
 		/* Create message */
 		message msg = { .wait = randomRange(2, 9), .show = randomRange(0,100) };
-		
-		/* While the buffer is full sleep, then add message */
-		while(putBuffer(msg, buffer)) {
-			/* Sleep for a second before trying to add message again */
-			sleep(1);
-		}
+		putBuffer(msg, buffer);
 
 		/* Sleep a random amount of time from 3 to 7 */
 		sleep(randomRange(3, 7));
@@ -47,16 +37,12 @@ void *consumer(void *arg) {
 	while(1) {
 		/* Create mesage object for retrieval and retrieve from buffer */
 		message msg;
-		int result = popBuffer(&msg, buffer);
+		popBuffer(&msg, buffer);
 
-		if (result != 0) {
-			/* If the buffer is full sleep for a second then try again */
-			sleep(1);
-		} else {
-			/* Sleep for the wait period of the message then show the show value */
-			sleep(msg.wait);
-			printf("%d\n", msg.show);
-		}
+		printf("Sleep For: %d\n", msg.wait);
+		/* Sleep for the wait period of the message then show the show value */
+		sleep(msg.wait);
+		printf("%d\n", msg.show);
 	}
 
 	return NULL;
@@ -64,7 +50,6 @@ void *consumer(void *arg) {
 
 /* Main function */
 int main(int argc, char* argv[]) {
-	srand(time(NULL));
 
 	int c_count;
 	if (argc != 2) {

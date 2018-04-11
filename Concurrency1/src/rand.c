@@ -19,7 +19,7 @@ int is_rdrnd_aval() {
 	unsigned int ecx;
 	unsigned int edx;
 
-	char vendor[13];
+	//char vendor[13];
 	
 	eax = 0x01;
 
@@ -37,18 +37,16 @@ int is_rdrnd_aval() {
 	}
 }
 
+MTRand r;
+int r_init = 0;
 int randomRange(int min, int max) {
     if (is_rdrnd_aval()) {
         return ((unsigned int) rdrnd()) % (max - min) + min;
     } else {
-        MTRand r = seedRand(time(NULL));
-        return ((unsigned int) genRand(&r)) % (max - min) + min;
-    }
-}
-
-int main(void) {
-    int i = 0;
-    for (i = 0; i < 1000000; i++) {
-        printf("%lu\n", randomRange(0,1000));
+		if (!r_init) {
+			r = seedRand(time(NULL));
+			r_init = 1;
+		}
+        return (int) (genRand(&r) * (max - min)) + min;
     }
 }

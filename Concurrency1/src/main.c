@@ -6,6 +6,7 @@
 #include <pthread.h>
 
 #include "buffer.h"
+#include "rand.h"
 
 typedef struct message message;
 

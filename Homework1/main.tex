@@ -4,6 +4,7 @@
 \usepackage{setspace}
 \usepackage{titling}
 \usepackage{listings}
+\usepackage{hyperref}
 
 \usepackage{geometry}
 \geometry{textheight=9.5in, textwidth=7in}
@@ -31,7 +32,6 @@
 
 
 % Document body
-
 \section{Command List}
 
 This is the command list for setting up our directory on the server, building the kernel, and running the QEMU VM.
@@ -67,6 +67,132 @@ This is the command list for setting up our directory on the server, building th
     \item reboot
 \end{enumerate}
 
+\section{Qemu Flags}
+
+These flags were researched using the qemu documentation. \cite{qemu_doc}
+
+\begin{lstlisting}[caption={Qemu Command}, label={lst:qemu}]
+qemu-system-i386 -gdb tcp::5532 -S -nographic -kernel <kernal_path> \
+                 -drive file=core-image-lsb-sdk-qemux86.ext4,if=virtio \
+                 -enable-kvm -net none -usb -localtime --no-reboot --append \
+                 "root=/dev/vda rw console=ttyS0 debug"
+}
+\end{lstlisting}
+\vspace{4mm}
+
+\begin{enumerate}
+    \item qemu-system-i386: Command used to invoke the VM.
+    \item -gdb: waits for gdb connection.
+
+    \begin{enumerate}
+        \item tcp::5532 used as an argument to gdb to allow for gdb to connect to port 5532.
+    \end{enumerate}
+
+    \item -S: do not start CPU at start-up. This flag makes it so the VM starts in a frozen state util a command has been used, like continue from the gdb window.
+
+    \item -nographic: stops the VM from trying to load a GUI, instead just runs in a command line application.
+
+    \item -kernel: loads a specified kernel.
+
+    \begin{enumerate}
+        \item bzImage-qemux65: the kernel being loaded by the VM in the -kernel call.
+    \end{enumerate}
+
+    \item -drive: loads a new drive. Mostly a shortcut for -blockdev and -device.
+
+    \begin{enumerate}
+        \item file =core-image-lsb-sdk-qemux86.ext4: this is the drive image being loaded in with the -drive flag.
+        \item if=virtio: interface manager for the -drive flag.
+    \end{enumerate}
+
+    \item -enable-kvm: enables kvm.
+
+    \item -net none: this flag stops the VM from being able to connect to the internet.
+
+    \item -USB: enables the VM to have access to the USB drivers.
+
+    \item -localtime: makes it so the real time clock to start in local time or the current utc.
+
+    \item --no-reboot: stops the VM from being allowed to reboot.
+
+    \item --append: the --append flag causes the VM to use the current command line for the VM’s command line.
+    
+    \begin{enumerate}
+        \item "root=/dev/vda rw console=ttyS0 debug": the command line being sent to the --append flag.
+    \end{enumerate}
+    
+\end{enumerate}
+
+\section{Concurrency Questions}
+
+\subsection{What do you think the main point of this assignment is?}
+
+To gain an understanding of how to properly use pthreads and mutexes/semaphores. The concurrency assignment also poses the idea of the producer consumer problem in order for us to further understand the importance of the resources used by the threads. Next, the usage of rdrand and Mersenne Twister require understanding of how to use assembly code in c and the amount of effort that goes into creating good random functions.
+
+\subsection{How did you personally approach the problem?}
+
+Design decisions, algorithm, etc.
+This was a group assignment so we all approached it differently. The general way we approached the assignment was to follow the basic idea that the little book of semaphores presented for the producer consumer problem.
+
+\subsection{How did you ensure your solution was correct?}
+
+Testing details, for instance.
+We used tracing. By having each thread print out their unique id and their sleep time, while having the producer print out what the sleep time it was grabbing was.
+
+\subsection{What did you learn?}
+
+We learned about Mersenne Twister, assembly usage in C, and more about pthreads and semaphores/mutexes.  We also learned how to think about shared resources among threads such that they don't effect each others interactions with the data.
+
+
+\section{Git Log}
+
+\begin{center}
+	\begin{tabular}{ |c|c|c| }
+		\hline
+		Checksum & User & Description \\
+		\hline
+        \href{https://github.com/brennand97/CS444/commit/27a06542de23be17ce0aa5bc488a6bfc0dfacba1}{27a0654} & Brennan Douglas & Initial commit\\\hline
+        \href{https://github.com/brennand97/CS444/commit/defac8295b6c858a8aea01745b131ef72420058c}{defac82} & Brennan Douglas & Added template folder\\\hline
+        \href{https://github.com/brennand97/CS444/commit/5d015a0995505a9367288dd4cb9d1210ec628a3e}{5d015a0} & Brennan Douglas & added basic instructions\\\hline
+        \href{https://github.com/brennand97/CS444/commit/fdf383b95856bc4299a44382daf9eee220e9e109}{fdf383b} & Brennan Douglas & added emphsis\\\hline
+        \href{https://github.com/brennand97/CS444/commit/04bfb5cc337bb7c092347bda650cce85dcae9182}{04bfb5c} & Brennan Douglas & Update qemu-vm-cmd-list.md\\\hline
+        \href{https://github.com/brennand97/CS444/commit/3658bee9b844a88a668a33c1f1412572ce364a7b}{3658bee} & Brennan Douglas & added missing file copy step\\\hline
+        \href{https://github.com/brennand97/CS444/commit/907a8b420ab1ec570664624dded37e2372de1db8}{907a8b4} & Brennan Douglas & Merge branch 'master' of https://github.com/brennand97/cs444\\\hline
+        \href{https://github.com/brennand97/CS444/commit/91cd156e0dc27e1408af9b4b66c66252edba29c4}{91cd156} & Brennan Douglas & added vm launch instructions\\\hline
+        \href{https://github.com/brennand97/CS444/commit/01be963b5536764397f29bdc3f4ff66158af9ff3}{01be963} & Brennan Douglas & Update qemu-vm-cmd-list.md\\\hline
+        \href{https://github.com/brennand97/CS444/commit/228566e34168979b25e7764492ebe81917e80f55}{228566e} & Brennan Douglas & Update qemu-vm-cmd-list.md\\\hline
+        \href{https://github.com/brennand97/CS444/commit/ca2bc04d0b4c37b58471597b684cca43a5c90f8d}{ca2bc04} & Brennan Douglas & Update qemu-vm-cmd-list.md\\\hline
+        \href{https://github.com/brennand97/CS444/commit/00ac3534cadf152d3195a4420929ba8295137f64}{00ac353} & Brennan Douglas & Update qemu-vm-cmd-list.md\\\hline
+        \href{https://github.com/brennand97/CS444/commit/b9880ada7935dc540c1276319866251979efda09}{b9880ad} & Brennan Douglas & added missing requirment to latex template\\\hline
+        \href{https://github.com/brennand97/CS444/commit/fbcf46d30a49e0ef8be79d544f17704142b1f208}{fbcf46d} & Brennan Douglas & Merge branch 'master' of https://github.com/brennand97/cs444\\\hline
+        \href{https://github.com/brennand97/CS444/commit/ca0bfdb5801e3399b69a10e54ed3dfe5cffd2bb4}{ca0bfdb} & Brennan Douglas & added gitignore\\\hline
+        \href{https://github.com/brennand97/CS444/commit/f4d08c2fb0cb5284a177889bfdb230f3e13f9732}{f4d08c2} & Brennan Douglas & Update qemu-vm-cmd-list.md\\\hline
+        \href{https://github.com/brennand97/CS444/commit/954c638162ca721804c39bc8dbcc5e613f6e1044}{954c638} & Brennan Douglas & Added start of hw1\\\hline
+        \href{https://github.com/brennand97/CS444/commit/c4ab3f92b24dbbf7b4601c0dc022c6a404a97c95}{c4ab3f9} & Brennan Douglas & Merge branch 'master' of https://github.com/brennand97/CS444\\\hline
+        \href{https://github.com/brennand97/CS444/commit/3b65bbf9fdce38fa8e998c2cd6e83ab691a57a19}{3b65bbf} & Brennan Douglas & remove swp files\\\hline
+	\end{tabular}
+\end{center}
+
+\section{Work Log}
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|c| }
+		\hline
+		Date & Author & Hours & Description \\
+		\hline
+		4/4/2018 & Brennan Douglas & 3 & Setting up VM and Kernal compalation. \\\hline
+        4/5/2018 & Brennan Douglas & 2 & Documenting Setup Process \\\hline
+        4/9/2018 & Cooper Hutchins & 1 & Researching qemu \\\hline
+        4/9/2018 & Nicholas Giles  & 1 & Researching qemu \\\hline
+        4/9/2018 & Brennan Douglas & 1 & Team meeting, worked on write up \\\hline
+        4/9/2018 & Cooper Hutchins & 1 & Team meeting, worked on write up \\\hline
+        4/9/2018 & Nicholas Giles  & 1 & Team meeting, worked on write up \\\hline
+        4/9/2018 & Brennan Douglas & 1 & HW1 cmd list \\\hline
+        4/11/2018 & Brennan Douglas & 1 & Team meeting, worked on write up \\\hline
+        4/11/2018 & Cooper Hutchins & 1 & Team meeting, worked on write up \\\hline
+        4/11/2018 & Nicholas Giles  & 1 & Team meeting, worked on write up \\\hline
+	\end{tabular}
+\end{center}
 
 % References
 %\cite[Sec 3.8]{freebsd}

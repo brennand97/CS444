@@ -2,6 +2,7 @@ CC=gcc
 CFLAGS=-Wall -g -lpthread
 
 all: src/main.c src/buffer.c src/mtwister.c src/rand.c
+	-mkdir -p out
 	$(CC) $(CFLAGS) -o out/buffer.o -c src/buffer.c
 	$(CC) $(CFLAGS) -o out/main.o -c src/main.c
 	$(CC) $(CFLAGS) -o out/mtwister.o -c src/mtwister.c

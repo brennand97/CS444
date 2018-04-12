@@ -18,7 +18,7 @@ void *producer(void *arg) {
 	/* Produce items forever */
 	while(1) {
 		/* Create message */
-		message msg = { .wait = randomRange(2, 9), .show = randomRange(0,100) };
+		message msg = { .wait = randomRange(2, 9), .show = randomRange(0,10000) };
 		putBuffer(msg, buffer);
 
 		/* Sleep a random amount of time from 3 to 7 */
@@ -39,7 +39,7 @@ void *consumer(void *arg) {
 		message msg;
 		popBuffer(&msg, buffer);
 
-		printf("Sleep For: %d\n", msg.wait);
+		//printf("Sleep For: %d\n", msg.wait);
 		/* Sleep for the wait period of the message then show the show value */
 		sleep(msg.wait);
 		printf("%d\n", msg.show);

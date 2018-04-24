@@ -6,6 +6,8 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#include "rand.h"
+
 #define SEATS 5
 #define moveup(y) printf("\033[%dA", (y))
 
@@ -57,15 +59,6 @@ void print(char* string, struct table* table) {
 	_sem_wait(&table->print);
 	printf(string);
 	_sem_post(&table->print);
-}
-
-// Random wrapper for range
-int randomRange(int min, int max) {
-	int value;
-	do {
-		value = ((unsigned int) rand()) % (max - min) + min;
-	} while (value > max && value < min);
-	return value;
 }
 
 /* Thread function */
@@ -137,9 +130,6 @@ int main(int argc, char* argv[]) {
 	char buffer[100];
 	int fork_v, first = 1;
 	
-
-	srand(time(0));
-	
 	// initialize tabe
 	table = (struct table*) malloc(sizeof(struct table));
 	_sem_init(&table->print, 0, 1);
@@ -175,10 +165,10 @@ int main(int argc, char* argv[]) {
 		if (first) {
 			first = 0;
 		} else {
-			if (argc > 1 && strcmp(argv[1], "-i") == 0) {
-				moveup(SEATS+3);
-			} else {
+			if (argc > 1 && strcmp(argv[1], "-f") == 0) {
 				printf("\n");
+			} else {
+				moveup(SEATS+3);
 			}
 		}
 

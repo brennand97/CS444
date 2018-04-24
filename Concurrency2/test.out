@@ -1,0 +1,304 @@
+Avaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  5   
+[8AAvaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  5   
+[8AAvaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  5   
+[8AAvaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  5   
+[8AAvaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  5   
+[8AAvaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  5   
+[8AAvaiable Forks: [0,1,2,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) 4    3     eat    2   
+[8AAvaiable Forks: [0,1,2,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) 4    3     eat    2   
+[8AAvaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) -    -     think  11   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [0,-,-,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) 2    1     eat    8   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [0,-,-,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) 2    1     eat    8   
+Immanuel Kant (3) -    -     think  12   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [0,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  13   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) 2    1     eat    8   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    4     eat    4   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) 2    1     eat    8   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    4     eat    4   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) 2    1     eat    8   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [0,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  4   
+Aristotle     (1) -    -     think  18   
+Socrates      (2) 2    1     eat    8   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [0,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  4   
+Aristotle     (1) -    -     wait   -   
+Socrates      (2) 2    1     eat    8   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [0,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  4   
+Aristotle     (1) 1    0     eat    6   
+Socrates      (2) -    -     think  5   
+Immanuel Kant (3) 3    2     eat    7   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [-,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  4   
+Aristotle     (1) 1    0     eat    6   
+Socrates      (2) -    -     think  5   
+Immanuel Kant (3) 3    2     eat    7   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [-,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  4   
+Aristotle     (1) 1    0     eat    6   
+Socrates      (2) -    -     think  5   
+Immanuel Kant (3) 3    2     eat    7   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [-,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     wait   -   
+Aristotle     (1) 1    0     eat    6   
+Socrates      (2) -    -     think  5   
+Immanuel Kant (3) 3    2     eat    7   
+John Locke    (4) -    -     think  15   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     wait   -   
+Aristotle     (1) 1    0     eat    6   
+Socrates      (2) -    -     think  5   
+Immanuel Kant (3) 3    2     eat    7   
+John Locke    (4) 4    -     wait   -   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     wait   -   
+Aristotle     (1) 1    0     eat    6   
+Socrates      (2) -    -     wait   -   
+Immanuel Kant (3) 3    2     eat    7   
+John Locke    (4) 4    -     wait   -   
+[8AAvaiable Forks: [0,1,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     wait   -   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) -    -     wait   -   
+Immanuel Kant (3) 3    2     eat    7   
+John Locke    (4) 4    -     wait   -   
+[8AAvaiable Forks: [-,1,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    -     wait   -   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) 2    1     eat    5   
+Immanuel Kant (3) -    -     think  4   
+John Locke    (4) 4    3     eat    4   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    -     wait   -   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) 2    1     eat    5   
+Immanuel Kant (3) -    -     think  4   
+John Locke    (4) 4    3     eat    4   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    -     wait   -   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) 2    1     eat    5   
+Immanuel Kant (3) -    -     think  4   
+John Locke    (4) 4    3     eat    4   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    4     eat    4   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) 2    1     eat    5   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    4     eat    4   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) 2    1     eat    5   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [-,-,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    4     eat    4   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) 2    1     eat    5   
+Immanuel Kant (3) 3    -     wait   -   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [-,1,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    4     eat    4   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) -    -     think  10   
+Immanuel Kant (3) 3    2     eat    8   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [-,1,-,-,-]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) 0    4     eat    4   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) -    -     think  10   
+Immanuel Kant (3) 3    2     eat    8   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [0,1,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  16   
+Aristotle     (1) -    -     think  13   
+Socrates      (2) -    -     think  10   
+Immanuel Kant (3) 3    2     eat    8   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [-,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  16   
+Aristotle     (1) 1    0     eat    3   
+Socrates      (2) -    -     think  10   
+Immanuel Kant (3) 3    2     eat    8   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [-,-,-,-,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  16   
+Aristotle     (1) 1    0     eat    3   
+Socrates      (2) -    -     think  10   
+Immanuel Kant (3) 3    2     eat    8   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [-,-,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  16   
+Aristotle     (1) 1    0     eat    3   
+Socrates      (2) -    -     think  10   
+Immanuel Kant (3) -    -     think  17   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [0,1,2,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  16   
+Aristotle     (1) -    -     think  11   
+Socrates      (2) -    -     think  10   
+Immanuel Kant (3) -    -     think  17   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [0,-,-,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  16   
+Aristotle     (1) -    -     think  11   
+Socrates      (2) 2    1     eat    6   
+Immanuel Kant (3) -    -     think  17   
+John Locke    (4) -    -     think  12   
+[8AAvaiable Forks: [0,-,-,3,4]
+Status:
+Name          Id  Left Right Status Wait
+Plato         (0) -    -     think  16   
+Aristotle     (1) -    -     think  11   
+Socrates      (2) 2    1     eat    6   
+Immanuel Kant (3) -    -     think  17   
+John Locke    (4) -    -     think  12   

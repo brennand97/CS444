@@ -1,16 +1,16 @@
-\begin{tabular}{l l l}\textbf{Detail} & \textbf{Author} & \textbf{Description}\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/77bdaae3462de04df412ac2bca4e493bb5f98a55}{77bdaae} & Brennan Douglas & added config file to git repo\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/34bc8f9f605ad4b0de2e16c4f78a9bc8a64cfd5e}{34bc8f9} & Brennan Douglas & added back all.config to .gitignore\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/16eaede969c0657cdfb8232c191056a4b6609d4b}{16eaede} & Brennan Douglas & updated .config local version tag to reflect hw2 branch\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/89292cade8d4661b075929749687b30878b047e8}{89292ca} & Brennan Douglas & started clook implmentation file\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/a98e1c6d5efe859e1abe454fef6b6962087cff55}{a98e1c6} & Brennan Douglas & added print statments\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/40d2c643941823903049adb0c51020c8b9ab23cf}{40d2c64} & Nicholas Giles & Finished working on the clook_add_request\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/f2d8cba32210643d0fb3ddc80b1f52027ad99cad}{f2d8cba} & Nicholas Giles & Merge branch 'hw2' of /scratch/spring2018/32/linux-yocto-3.19 into hw2\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/c3d85224bae8816c4c38a8c2ac8771de76608a93}{c3d8522} & Nicholas Giles & Handled the merge conflict\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/550a566e3a12851b244fbb9b8d694cf13a23ef0a}{550a566} & Brennan Douglas & updated configuration and building files\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/8c89b727efeb64c7ca8d0e1f4e8eb517a5a35fdc}{8c89b72} & Brennan Douglas & Merge branch 'hw2' of /scratch/spring2018/32/linux-yocto-3.19 into hw2\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/44f57c19197da390373b4e7a35e998b079f96bed}{44f57c1} & Nicholas Giles & Updated name of the file from clook_sched.c to sstf_sched.c and updated the Makefile for the change\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/63564c98f39c242f9f809ac580805488ee4ff1de}{63564c9} & Brennan Douglas & updated config to add clook option\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/c5115d3b8ef68a1c11d4dfa3bf153a2b492f14af}{c5115d3} & Nicholas Giles & Merge branch 'hw2' of /scratch/spring2018/32/linux-yocto-3.19 into hw2\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/fa13e4783ca9c01e47ce00261f3b80baebd0d3d0}{fa13e47} & Brennan Douglas & updated add and dispatch function\\\hline
-\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/2f0d199bb86f46305d377f8746f997fd517b8d4a}{2f0d199} & Brennan Douglas & updated add algorithm\\\hline\end{tabular}
+\begin{tabular}{l l l}\textbf{Detail} & \textbf{Date} & \textbf{Author} & \textbf{Description}\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/77bdaae3462de04df412ac2bca4e493bb5f98a55}{77bdaae} & 2018-04-25 17:28:55 & Brennan Douglas & added config file to git repo\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/34bc8f9f605ad4b0de2e16c4f78a9bc8a64cfd5e}{34bc8f9} & 2018-04-25 17:32:01 & Brennan Douglas & added back all.config to .gitignore\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/16eaede969c0657cdfb8232c191056a4b6609d4b}{16eaede} & 2018-04-25 17:35:54 & Brennan Douglas & updated .config local version tag to reflect hw2 branch\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/89292cade8d4661b075929749687b30878b047e8}{89292ca} & 2018-04-25 21:10:53 & Brennan Douglas & started clook implmentation file\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/a98e1c6d5efe859e1abe454fef6b6962087cff55}{a98e1c6} & 2018-04-25 21:35:50 & Brennan Douglas & added print statments\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/40d2c643941823903049adb0c51020c8b9ab23cf}{40d2c64} & 2018-04-25 21:43:12 & Nicholas Giles & Finished working on the clook_add_request\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/f2d8cba32210643d0fb3ddc80b1f52027ad99cad}{f2d8cba} & 2018-04-25 21:44:04 & Nicholas Giles & Merge branch 'hw2' of /scratch/spring2018/32/linux-yocto-3.19 into hw2\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/c3d85224bae8816c4c38a8c2ac8771de76608a93}{c3d8522} & 2018-04-25 21:45:22 & Nicholas Giles & Handled the merge conflict\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/550a566e3a12851b244fbb9b8d694cf13a23ef0a}{550a566} & 2018-04-25 21:48:41 & Brennan Douglas & updated configuration and building files\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/8c89b727efeb64c7ca8d0e1f4e8eb517a5a35fdc}{8c89b72} & 2018-04-25 21:58:46 & Brennan Douglas & Merge branch 'hw2' of /scratch/spring2018/32/linux-yocto-3.19 into hw2\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/44f57c19197da390373b4e7a35e998b079f96bed}{44f57c1} & 2018-04-25 22:26:29 & Nicholas Giles & Updated name of the file from clook_sched.c to sstf_sched.c and updated the Makefile for the change\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/63564c98f39c242f9f809ac580805488ee4ff1de}{63564c9} & 2018-04-25 22:30:43 & Brennan Douglas & updated config to add clook option\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/c5115d3b8ef68a1c11d4dfa3bf153a2b492f14af}{c5115d3} & 2018-04-25 22:31:05 & Nicholas Giles & Merge branch 'hw2' of /scratch/spring2018/32/linux-yocto-3.19 into hw2\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/fa13e4783ca9c01e47ce00261f3b80baebd0d3d0}{fa13e47} & 2018-05-01 07:52:57 & Brennan Douglas & updated add and dispatch function\\\hline
+\href{git://git.yoctoproject.org/linux-yocto-3.19/commit/2f0d199bb86f46305d377f8746f997fd517b8d4a}{2f0d199} & 2018-05-02 19:33:44 & Brennan Douglas & updated add algorithm\\\hline\end{tabular}

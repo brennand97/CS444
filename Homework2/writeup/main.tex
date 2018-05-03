@@ -34,7 +34,7 @@
 % Document body
 \section{The design you plan to use to implement the LOOK algorithms.}
 
-Our plan was to take advantage of the Linux linked list being doubly-linked and circular. So we plan to make the head of the queue to always be where the read/write head is and in order to find the head we search through the sort queue for when the jump from a high to low value happens, and once the head is found the new request will be added through an insertion sort into the necessary spot based on the location it wants to access. For dispatching, we plan on dispatching from the current head of the list, and then add it to the tail of the dispatch queue.  This way the order that was already created is persevered and the saw-tooth ordered requests are obtained.
+Our plan was to take advantage of the Linux linked list being doubly-linked and circular. \cite{roman10} So we plan to make the head of the queue to always be where the read/write head is and in order to find the head we search through the sort queue for when the jump from a high to low value happens, and once the head is found the new request will be added through an insertion sort into the necessary spot based on the location it wants to access. For dispatching, we plan on dispatching from the current head of the list, and then add it to the tail of the dispatch queue.  This way the order that was already created is persevered and the saw-tooth ordered requests are obtained.
 
 \section{Questions:}
 \subsection{What do you think the main point of this assignment is?}
@@ -93,5 +93,8 @@ This is our git log for the work completed on the kernel.  This doubles as our w
         \href{git://git.yoctoproject.org/linux-yocto-3.19/commit/2f0d199bb86f46305d377f8746f997fd517b8d4a}{2f0d199} & 2018-05-02 19:33:44 & Brennan Douglas & updated add algorithm\\\hline
 	\end{tabular}
 \end{center}
+
+\bibliographystyle{IEEEtran}
+\bibliography{./ref}
 
 \end{document}

@@ -11,6 +11,10 @@
 #define SEATS 5
 #define moveup(y) printf("\033[%dA", (y))
 
+struct llist {
+	struct llist *next;
+	int			  value;
+};
 
 struct table {
 	sem_t print;

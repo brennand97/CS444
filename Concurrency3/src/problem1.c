@@ -56,35 +56,47 @@ int _sem_getvalue(sem_t* s) {
 
 
 void start(struct lock *l) {
+	// Claim access to lock object
 	_sem_wait(&l->add);
 	
+	// Grab an aviable slot
 	_sem_wait(&l->avaiable);
+	// Grab a busy slot
 	_sem_wait(&l->busy);
 
+	// Check to see if all slots are filled
 	if (_sem_getvalue(&l->busy) == 0) {
+		// If so signal that it is locked
 		l->locked = 1;
 		printf("LOCKED\n");
 	}
 	
+	// Release access to lock object
 	_sem_post(&l->add);
 }
 
 void complete(struct lock *l) {
 	int i;
 	
+	// Claim access to the lock object
 	_sem_post(&l->add);
 
+	// Release busy sem
 	_sem_post(&l->busy);
 	if (l->locked && _sem_getvalue(&l->busy) == MAX) {
+		// If locked and all slots are now empty untrigger lock
 		l->locked = 0;
 		for (i = 0; i < MAX; i++) {
+			// Release all avaiable slots
 			_sem_post(&l->avaiable);
 		}
 		printf("UNLOCKED\n");
 	} else if (!l->locked) {
+		// If not locked release avaiable slot
 		_sem_post(&l->avaiable);
 	}
 
+	// Release access to lock object
 	_sem_post(&l->add);
 }
 
@@ -95,15 +107,19 @@ void *thread(void *arg) {
 	int wait;
 	
 	while (1) {
+		// Grab resource
 		start(lock);
 
+		// Wait on resource
 		wait = randomRange(2,8);
 		printf("Start (sem: %d/%d) waiting  for %d\n", MAX - _sem_getvalue(&lock->busy), MAX, wait);
 		fflush(stdout);
 		sleep(wait);
 
+		// Release resource
 		complete(lock);
 
+		// Cooldown
 		wait = randomRange(6,12);
 		printf("Done  (sem: %d/%d) cooldown for %d\n", MAX - _sem_getvalue(&lock->busy), MAX, wait);
 		fflush(stdout);
@@ -126,6 +142,7 @@ int main(int argc, char* argv[]) {
 	_sem_init(&lock->busy, 0, MAX);
 	_sem_init(&lock->add, 0, 1);
 
+	// initialize threads
 	for (i = 0; i < MAX_T; i++) {
 		if(pthread_create(&threads[i], NULL, thread, lock)) {
 			fprintf(stderr, "Error: failed to create pthread.\n");

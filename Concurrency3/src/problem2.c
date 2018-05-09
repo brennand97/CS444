@@ -8,9 +8,11 @@
 
 #include "rand.h"
 
-#define INSERTERS 1
-#define DELETERS 1
-#define SEARCHERS 3
+#define INSERTERS 2
+#define DELETERS  2
+#define SEARCHERS 10
+
+#define WAIT 1
 
 #define moveup(y) printf("\033[%dA", (y))
 
@@ -22,6 +24,7 @@ struct list {
 	sem_t         active_searches;
 	sem_t         all_searches_complete;
 	int           waiting;
+	int			  deleting;
 };
 
 struct node {
@@ -64,17 +67,28 @@ int _sem_getvalue(sem_t* s) {
 	return value;
 }
 
+int active(struct list *l) {
+	return (_sem_getvalue(&l->deleter) == 0) + _sem_getvalue(&l->active_searches);
+}
+
+// list search function
 struct node* search(struct list *l, int value) {
 	struct node *n;
-	if (_sem_getvalue(&l->deleter) == 0) {
+	if (l->deleting) {
+		// If deleting is currently happening wait on searches
+		// and increment waiting counter
 		l->waiting++;
 		_sem_wait(&l->searches);
 	}
+	// post to active search semaphore to infrom list of activity
 	_sem_post(&l->active_searches);
 	if (_sem_getvalue(&l->all_searches_complete) > 0) {
+		// if all searches complete is true set to false while running
 		_sem_wait(&l->all_searches_complete);
 	}
+	printf("S--    (%d Active)\n", active(l));
 	
+	// find node that matches value
 	n = l->head;
 	while (n != NULL) {
 		if (n->value == value) {
@@ -82,47 +96,78 @@ struct node* search(struct list *l, int value) {
 		}
 		n = n->next;
 	}
+
+	// sleep so that interactions can be observed
+	sleep(WAIT);
 	
+	// decrement active search
 	_sem_wait(&l->active_searches);
 	if (_sem_getvalue(&l->active_searches) == 0) {
+		// if last active search set all searches complte to true
 		_sem_post(&l->all_searches_complete);
 	}
 
+	// return node (or null)
 	return n;
 }
 
+// list insert function
 void insert(struct list *l, int value) {
 	struct node *n, *nt;
 
+	// wait for deleter "mutex"
 	_sem_wait(&l->deleter);
+	// wait for inserter "mutex"
 	_sem_wait(&l->inserter);
+	printf("-I-    (%d Active)\n", active(l));
 
+	// create new node
 	n = (struct node*) malloc(sizeof(struct node));
 	n->value = value;
 	n->next = NULL;
 
+	// get tail of list
 	nt = l->head;
 	while(nt != NULL && nt->next != NULL) {
 		nt = nt->next;
 	}
 
-	nt->next = n;
+	if (nt != NULL) {
+		// set next of tail to new node
+		nt->next = n;
+	} else {
+		// if no head set to head
+		l->head = n;
+	}
 
+	// sleep so that interactions can be observed
+	sleep(WAIT);
+
+	// release "mutexes"
 	_sem_post(&l->deleter);
 	_sem_post(&l->inserter);
 }
 
+// list delete function
 void delete(struct list *l, int value) {
 	int i;
 	struct node *n, *np;
 
+	// wait for deleter "mutex"
 	_sem_wait(&l->deleter);
+	// wait for insterer "mutex"
 	_sem_wait(&l->inserter);
 	if (_sem_getvalue(&l->active_searches) > 0) {
+		// if active searches wait for all to complete
 		_sem_wait(&l->all_searches_complete);
 	}
+	// set deleting flag
+	l->deleting = 1;
+	printf("--D    (%d Active)\n", active(l));
 
-
+	// find first node with value
+	n = l->head;
+	np = NULL;
 	while(n != NULL) {
 		if (n->value == value) {
 			break;
@@ -130,15 +175,33 @@ void delete(struct list *l, int value) {
 		np = n;
 		n = n->next;
 	}
-	if (np != NULL && n != NULL) {
-		np->next = n->next;
+
+	if (n != NULL) {
+		// update to new connection
+		if (np != NULL) {
+			// set previous to next
+			np->next = n->next;
+		} else {
+			// if pervious is null set head to next
+			l->head = n->next;
+		}
+		// free the node
 		free(n);
 	}
 
+	// sleep so that interactions can be observed
+	sleep(WAIT);
+
+	// reset deleting flag
+	l->deleting = 0;
+	// reset all searches complete flag
 	_sem_post(&l->all_searches_complete);
 	for (i = 0; i < l->waiting; i++) {
+		// release all waiting searches
 		_sem_post(&l->searches);
 	}
+	l->waiting = 0;
+	// release deleter and inerter "mutexes"
 	_sem_post(&l->deleter);
 	_sem_post(&l->inserter);
 }
@@ -147,6 +210,16 @@ void delete(struct list *l, int value) {
 void *inserter(void *arg) {
 	/* Convert void argument */
 	struct list* list = (struct list*) arg;
+	int wait;
+
+	while(1) {
+
+		// wait and insert random values
+		wait = randomRange(1,10);
+		sleep(wait);
+		insert(list, randomRange(0,20));
+
+	}
 
 	return NULL;
 }
@@ -155,6 +228,16 @@ void *inserter(void *arg) {
 void *deleter(void *arg) {
 	/* Convert void argument */
 	struct list* list = (struct list*) arg;
+	int wait;
+
+	while(1) {
+
+		// wait and delter random values
+		wait = randomRange(1,10);
+		sleep(wait);
+		delete(list, randomRange(0,20));
+
+	}
 
 	return NULL;
 }
@@ -163,6 +246,16 @@ void *deleter(void *arg) {
 void *searcher(void *arg) {
 	/* Convert void argument */
 	struct list* list = (struct list*) arg;
+	int wait;
+
+	while(1) {
+
+		// wait and serach for random values
+		wait = randomRange(1,10);
+		sleep(wait);
+		search(list, randomRange(0,20));
+
+	}
 
 	return NULL;
 }
@@ -183,8 +276,11 @@ int main(int argc, char* argv[]) {
 	_sem_init(&list->inserter, 0, 1);
 	_sem_init(&list->searches, 0, 0);
 	_sem_init(&list->active_searches, 0, 0);
-	_sem_init(&list->all_searches_complete, 0, 0);
+	_sem_init(&list->all_searches_complete, 0, 1);
 
+	printf("S: Searching\nI: Inserting\nD: Deleting\n");
+
+	// initilize threads
 	for (i = 0; i < INSERTERS; i++) {
 		// initilize pthreads
 		if(pthread_create(&inserters[i], NULL, inserter, list)) {
@@ -234,6 +330,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
+	// free list
 	n = list->head;
 	np = NULL;
 	while(n != NULL) {

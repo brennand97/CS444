@@ -65,7 +65,7 @@ int _sem_getvalue(sem_t* s) {
 }
 
 struct node* search(struct list *l, int value) {
-	struct node *n, *np;
+	struct node *n;
 	if (_sem_getvalue(&l->deleter) == 0) {
 		l->waiting++;
 		_sem_wait(&l->searches);
@@ -80,7 +80,6 @@ struct node* search(struct list *l, int value) {
 		if (n->value == value) {
 			break;
 		}
-		np = n;
 		n = n->next;
 	}
 	
@@ -213,7 +212,7 @@ int main(int argc, char* argv[]) {
 
 	/* Join threads */
 	for (i = 0; i < INSERTERS; i++) {
-		if(pthread_join(&inserters[i], NULL)) {
+		if(pthread_join(inserters[i], NULL)) {
 			fprintf(stderr, "Error: failed to join pthread.\n");
 			return 5;
 		}
@@ -221,7 +220,7 @@ int main(int argc, char* argv[]) {
 
 	/* Join threads */
 	for (i = 0; i < DELETERS; i++) {
-		if(pthread_join(&deleters[i], NULL)) {
+		if(pthread_join(deleters[i], NULL)) {
 			fprintf(stderr, "Error: failed to join pthread.\n");
 			return 5;
 		}
@@ -229,7 +228,7 @@ int main(int argc, char* argv[]) {
 
 	/* Join threads */
 	for (i = 0; i < SEARCHERS; i++) {
-		if(pthread_join(&searchers[i], NULL)) {
+		if(pthread_join(searchers[i], NULL)) {
 			fprintf(stderr, "Error: failed to join pthread.\n");
 			return 5;
 		}

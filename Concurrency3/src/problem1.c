@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
 
 	/* Join threads */
 	for (i = 0; i < MAX_T; i++) {
-		if(pthread_join(&threads[i], NULL)) {
+		if(pthread_join(threads[i], NULL)) {
 			fprintf(stderr, "Error: failed to join pthread.\n");
 			return 5;
 		}

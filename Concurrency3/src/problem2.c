@@ -10,7 +10,7 @@
 
 #define INSERTERS 2
 #define DELETERS  2
-#define SEARCHERS 10
+#define SEARCHERS 5
 
 #define WAIT 1
 
@@ -144,8 +144,8 @@ void insert(struct list *l, int value) {
 	sleep(WAIT);
 
 	// release "mutexes"
-	_sem_post(&l->deleter);
 	_sem_post(&l->inserter);
+	_sem_post(&l->deleter);
 }
 
 // list delete function
@@ -202,8 +202,8 @@ void delete(struct list *l, int value) {
 	}
 	l->waiting = 0;
 	// release deleter and inerter "mutexes"
-	_sem_post(&l->deleter);
 	_sem_post(&l->inserter);
+	_sem_post(&l->deleter);
 }
 
 /* Thread function */

@@ -120,7 +120,7 @@ void* customer(void *arg) {
 			// Wait for barber chair to open
 			_sem_wait(&shop->barber_chair[index]);
 		
-			shop->cut_time = randomRange(1,5);
+			shop->cut_time = randomRange(1,7);
 
 			// Describe the cut time to the barber
 			_sem_post(&shop->describe_cut);
@@ -135,6 +135,7 @@ void* customer(void *arg) {
 
 		} else {
 			shop->sent_away++;
+			_sem_post(&shop->print);
 		}
 		// leave
 		

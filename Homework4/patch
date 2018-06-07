@@ -1,0 +1,483 @@
+diff --git a/arch/x86/syscalls/syscall_32.tbl b/arch/x86/syscalls/syscall_32.tbl
+index b3560ec..e14bb51 100644
+--- a/arch/x86/syscalls/syscall_32.tbl
++++ b/arch/x86/syscalls/syscall_32.tbl
+@@ -365,3 +365,7 @@
+ 356	i386	memfd_create		sys_memfd_create
+ 357	i386	bpf			sys_bpf
+ 358	i386	execveat		sys_execveat			stub32_execveat
++600	i386	slob_free_space		sys_slob_free_space
++601 i386	slob_total_space	sys_slob_total_space
++602 i386	slob_best_fit		sys_slob_best
++603	i386	slob_first_fit		sys_slob_first
+diff --git a/hw4/Makefile b/hw4/Makefile
+new file mode 100644
+index 0000000..2ecec7b
+--- /dev/null
++++ b/hw4/Makefile
+@@ -0,0 +1,8 @@
++obj-m := mod.o
++KDIR := /scratch/spring2018/32/linux-yocto-3.19/
++PWD_C := $(shell pwd)
++
++default:
++	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD_C) modules
++clean:
++	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD_C) clean
+diff --git a/hw4/fragCalc.c b/hw4/fragCalc.c
+new file mode 100644
+index 0000000..b6d1113
+--- /dev/null
++++ b/hw4/fragCalc.c
+@@ -0,0 +1,18 @@
++#define _GNU_SOURCE
++#include <stdio.h>
++#include <unistd.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++
++
++int main(void) {
++
++    long free_sp = syscall(600);
++    long total_sp = syscall(601);
++
++    float ft = ((float)free_sp/(float)total_sp);
++
++    printf("%.10f\n",ft);
++
++    return 0;
++}
+diff --git a/hw4/loadFiles.sh b/hw4/loadFiles.sh
+new file mode 100755
+index 0000000..7099694
+--- /dev/null
++++ b/hw4/loadFiles.sh
+@@ -0,0 +1,10 @@
++#!/bin/bash
++
++make
++scp -P 5532 mod.ko root@localhost:
++make clean
++
++scp -P 5532 setBestFit.c root@localhost:
++scp -P 5532 setFirstFit.c root@localhost:
++scp -P 5532 fragCalc.c root@localhost:
++scp -P 5532 testScript.sh root@localhost:
+diff --git a/hw4/mod.c b/hw4/mod.c
+new file mode 100644
+index 0000000..e5b9b0b
+--- /dev/null
++++ b/hw4/mod.c
+@@ -0,0 +1,37 @@
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/random.h>
++
++// Test the slob instance
++
++static int __init malloc_init(void) {
++
++	void *one, *two;
++	int i = 0, r_one, r_two;
++
++	for(i = 0; i < 999999; i++) {
++		
++		get_random_bytes(&r_one, sizeof(r_one));
++		get_random_bytes(&r_two, sizeof(r_two));
++
++		one = kmalloc(r_one, GFP_KERNEL);
++		kfree(one);
++
++		two = kmalloc(r_two, GFP_KERNEL);
++		kfree(two);
++		
++	}
++
++	return 0;
++
++}
++
++static void __exit malloc_exit(void) {
++
++}
++
++module_init(malloc_init);
++module_exit(malloc_exit);
++
++MODULE_AUTHOR("Brennan Douglas");
++MODULE_LICENSE("GPL");
+diff --git a/hw4/setBestFit.c b/hw4/setBestFit.c
+new file mode 100644
+index 0000000..4d18e43
+--- /dev/null
++++ b/hw4/setBestFit.c
+@@ -0,0 +1,16 @@
++#define _GNU_SOURCE
++#include <stdio.h>
++#include <unistd.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++
++
++int main(void) {
++
++    if(syscall(602)) {
++		printf("SLOB algorithm set to Best Fit.\n");
++	}
++
++    return 0;
++
++}
+diff --git a/hw4/setFirstFit.c b/hw4/setFirstFit.c
+new file mode 100644
+index 0000000..8e69199
+--- /dev/null
++++ b/hw4/setFirstFit.c
+@@ -0,0 +1,16 @@
++#define _GNU_SOURCE
++#include <stdio.h>
++#include <unistd.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++
++
++int main(void) {
++
++    if(syscall(603)) {
++		printf("SLOB algorithm set to First Fit.\n");
++	}
++
++    return 0;
++
++}
+diff --git a/hw4/testScript.sh b/hw4/testScript.sh
+new file mode 100644
+index 0000000..a6198e99
+--- /dev/null
++++ b/hw4/testScript.sh
+@@ -0,0 +1,50 @@
++#!/bin/bash
++
++gcc setBestFit.c -o setBestFit
++gcc setFirstFit.c -o setFirstFit
++gcc fragCalc.c -o fragCalc
++
++insmod mod.ko &> /dev/null
++rmmod mod.ko
++
++# Change the algorithm to first fit
++./setFirstFit
++echo "Test First Fit: Fragmentation (free/total):"
++echo ""
++
++# Stablize memory
++for i in {1..5}
++do
++insmod mod.ko
++rmmod mod.ko
++done
++
++# Run the first fit test
++for i in {1..10}
++do
++insmod mod.ko
++./fragCalc
++rmmod mod.ko
++done
++
++echo ""
++
++# Change the algorithm to best fit
++./setBestFit
++echo "Test Best Fit: Fragmentation (free/total):"
++echo ""
++
++# Stablize memory
++for i in {1..5}
++do
++insmod mod.ko
++rmmod mod.ko
++done
++
++# Run the best fit test
++for i in {1..10}
++do
++insmod mod.ko
++./fragCalc
++rmmod mod.ko
++done
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 85893d7..b4adf81 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -882,4 +882,9 @@ asmlinkage long sys_execveat(int dfd, const char __user *filename,
+ 			const char __user *const __user *argv,
+ 			const char __user *const __user *envp, int flags);
+ 
++asmlinkage long sys_slob_free_space(void);
++asmlinkage long sys_slob_total_space(void);
++asmlinkage long sys_slob_best(void);
++asmlinkage long sys_slob_first(void);
++
+ #endif
+diff --git a/mm/slob.c b/mm/slob.c
+index 96a8620..bf003ab 100644
+--- a/mm/slob.c
++++ b/mm/slob.c
+@@ -102,6 +102,11 @@ static LIST_HEAD(free_slob_medium);
+ static LIST_HEAD(free_slob_large);
+ 
+ /*
++ * Signal slob algorithm
++ */
++static int slob_best_fit = 0;
++
++/*
+  * slob_page_free: true for pages on free_slob_pages list.
+  */
+ static inline int slob_page_free(struct page *sp)
+@@ -263,6 +268,87 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
+ }
+ 
+ /*
++ * Allocate a slob specific block within a given slob_page sp.
++ */
++static void *slob_page_alloc_best(struct page *sp, size_t size, int align, slob_t* best_prev, slob_t* best_cur)
++{
++	slob_t *prev = best_prev, *cur = best_cur, *aligned = NULL;
++	int delta = 0, units = SLOB_UNITS(size);
++
++	slobidx_t avail = slob_units(cur);
++
++	if (align) {
++		aligned = (slob_t *)ALIGN((unsigned long)cur, align);
++		delta = aligned - cur;
++	}
++		
++	slob_t *next;
++
++	if (delta) { /* need to fragment head to align? */
++		next = slob_next(cur);
++		set_slob(aligned, avail - delta, next);
++		set_slob(cur, delta, aligned);
++		prev = cur;
++		cur = aligned;
++		avail = slob_units(cur);
++	}
++
++	next = slob_next(cur);
++	if (avail == units) { /* exact fit? unlink. */
++		if (prev)
++			set_slob(prev, slob_units(prev), next);
++		else
++			sp->freelist = next;
++	} else { /* fragment */
++		if (prev)
++			set_slob(prev, slob_units(prev), cur + units);
++		else
++			sp->freelist = cur + units;
++		set_slob(cur + units, avail - units, next);
++	}
++
++	sp->units -= units;
++	if (!sp->units)
++		clear_slob_page_free(sp);
++	return cur;
++}
++
++/*
++ * slob_find_best_fit: find the best fit on a page
++ */
++static int slob_find_best_fit(struct page *sp, size_t size, int align, slob_t **best_prev, slob_t** best) {	
++	slob_t *prev, *cur, *aligned = NULL;
++	int delta = 0, units = SLOB_UNITS(size), best_delta = -1;
++
++	*best = NULL;
++	*best_prev = NULL;
++
++	for (prev = NULL, cur = sp->freelist; ; prev = cur, cur = slob_next(cur)) {
++		slobidx_t avail = slob_units(cur);
++
++		if (align) {
++			aligned = (slob_t *)ALIGN((unsigned long)cur, align);
++			delta = aligned - cur;
++		}
++
++		if (avail >= units + delta && (*best == NULL || ((avail - units - delta) < best_delta))) {
++			*best_prev = prev;
++			*best = cur;
++			best_delta = avail - units - delta;
++			//printk("slob: find: best_delta: %d\n", best_delta);
++			if (best_delta == 0) {
++				break;
++			}
++		}
++
++		if (slob_last(cur))
++			break;
++	}
++
++	return best_delta;
++}
++
++/*
+  * slob_alloc: entry point into the slob allocator.
+  */
+ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+@@ -273,6 +359,10 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 	slob_t *b = NULL;
+ 	unsigned long flags;
+ 
++	slob_t *best = NULL, *tmp_best = NULL, *best_prev = NULL, *tmp_best_prev = NULL;
++	struct page *best_sp;
++	int best_delta = -1, tmp_delta = -1;
++
+ 	if (size < SLOB_BREAK1)
+ 		slob_list = &free_slob_small;
+ 	else if (size < SLOB_BREAK2)
+@@ -294,12 +384,35 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 		/* Enough room on this page? */
+ 		if (sp->units < SLOB_UNITS(size))
+ 			continue;
++		
++		if (slob_best_fit) {
++			
++			/* Find best fit */
++			tmp_delta = slob_find_best_fit(sp, size, align, &tmp_best_prev, &tmp_best);
++			if ((best == NULL && tmp_delta >= 0) || tmp_delta < best_delta) {
++				//printk("slob: best_delta = %d\n", tmp_delta);
++				best_delta = tmp_delta;
++				best = tmp_best;
++				best_prev = tmp_best_prev;
++				best_sp = sp;
++			}
++			//printk("slob: best_delta: %d\n", best_delta);
++
++			/* Is perfect fit? */
++			if (best_delta == 0)
++				break;
+ 
+-		/* Attempt to alloc */
+-		prev = sp->lru.prev;
+-		b = slob_page_alloc(sp, size, align);
+-		if (!b)
+ 			continue;
++		
++		} else {		
++
++			/* Attempt to alloc */
++			prev = sp->lru.prev;
++			b = slob_page_alloc(sp, size, align);
++			if (!b)
++				continue;
++
++		}
+ 
+ 		/* Improve fragment distribution and reduce our average
+ 		 * search time by starting our next search here. (see
+@@ -308,9 +421,15 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 				slob_list->next != prev->next)
+ 			list_move_tail(slob_list, prev->next);
+ 		break;
++
+ 	}
+-	spin_unlock_irqrestore(&slob_lock, flags);
+ 
++	if (slob_best_fit && best_delta > -1) {
++		b = slob_page_alloc_best(best_sp, size, align, best_prev, best);
++	}
++
++	spin_unlock_irqrestore(&slob_lock, flags);
++	
+ 	/* Not enough space: must allocate a new page */
+ 	if (!b) {
+ 		b = slob_new_pages(gfp & ~__GFP_ZERO, 0, node);
+@@ -640,3 +759,87 @@ void __init kmem_cache_init_late(void)
+ {
+ 	slab_state = FULL;
+ }
++
++asmlinkage long sys_slob_total_space(void){
++	long num_pages = 0; /* total pages in all lists */
++	struct list_head *slob_list;
++	struct page *sp;
++	unsigned long flags;
++
++	//printk(KERN_DEBUG "slob: running sys_slob_total_space\n");
++
++	spin_lock_irqsave(&slob_lock,flags);
++
++	/*small */
++        slob_list = &free_slob_small;
++	list_for_each_entry(sp,slob_list, lru){
++	   num_pages++;
++	}
++
++
++	/*medium */
++	slob_list = &free_slob_medium;
++	list_for_each_entry(sp,slob_list, lru){
++	    num_pages++;
++	}
++
++	/* large */
++	slob_list = &free_slob_large;
++	list_for_each_entry(sp,slob_list, lru){
++
++	num_pages++;
++
++	}
++
++	spin_unlock_irqrestore(&slob_lock, flags);
++
++	return num_pages * SLOB_UNITS(PAGE_SIZE);
++
++}
++
++asmlinkage long sys_slob_free_space(void){
++	long free_space = 0;
++	struct list_head *slob_list;
++	struct page *sp;
++	unsigned long flags;
++
++	//printk(KERN_DEBUG "slob: running sys_slob_free_space\n");
++
++	spin_lock_irqsave(&slob_lock, flags);
++
++
++	/*small */
++	slob_list = &free_slob_small;
++	list_for_each_entry(sp,slob_list, lru){
++		free_space += sp->units;
++
++	}
++
++	/*medium */
++	slob_list = &free_slob_medium;
++	list_for_each_entry(sp,slob_list,lru){
++		free_space += sp->units;
++
++	}
++
++	/* large */
++	slob_list = &free_slob_large;
++	list_for_each_entry(sp,slob_list, lru){
++		free_space += sp->units;
++
++	}
++
++	spin_unlock_irqrestore(&slob_lock, flags);
++
++	return free_space;
++}
++
++asmlinkage long sys_slob_best(void) {
++	slob_best_fit = 1;
++	return 1;
++}
++
++asmlinkage long sys_slob_first(void) {
++	slob_best_fit = 0;
++	return 1;
++}

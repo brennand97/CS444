@@ -1,0 +1,190 @@
+\documentclass[onecolumn, draftclsnofoot,10pt, compsoc]{IEEEtran}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{titling}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\usepackage{geometry}
+\geometry{textheight=9.5in, textwidth=7in}
+
+\renewcommand{\lstlistingname}{Code}
+
+\title{Homework Assignment 4\\\large CS444 Spring 2018}
+\author{Brennan Douglas, Cooper Hutchins, Nicholas Giles}
+\date{May 31, 2018}
+
+% Syntax highlighting
+\lstset{
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+	frame = single,                  % code framing
+}
+
+\begin{document}
+\begin{titlingpage}
+			\maketitle
+      \begin{abstract}
+			\noindent Homework 4 required the figuring out how to adjust the slab allocation algorithm to best fit instead of first fit.  Then, compare the fragmentation between the two algorithms.
+      \end{abstract}
+\end{titlingpage}
+
+\newpage
+\pagenumbering{arabic}
+
+\clearpage
+\singlespace
+
+\section{Design} 
+The best fit algorithm requires the smallest possible size allocation across all pages available. \cite{youtube_2016} In order to do this, we plan on changing the slob.c file to add a helper function that returns the smallest available size of a given page, and then slob\_alloc keeps ahold of the smallest block location and continues iterating through the pages. This goes on until either every page has been called, if there are no spaces it creates a new page and places the block there, or it terminates immediately on sight of a spot with the perfect size.  We also will create a new helper function that takes a specific block pointer in a page and allocs the new block there.
+
+As for switching between the (already implemented) first fit and best fit algorithm we figured we would make the slob.c allocation change depending on a boolean value in the file.  We then will update this flag by creating two new system calls that switch it on and off.  This will allow us to change between the algorithms without having to restart the VM therefore speeding up the testing process.
+
+To test our implementation we will create a c script that calls the two required system calls, one to calculate free space and one to calculate total space, then divide the two returned values to calculate the fragmentation ratio.  Two more c scripts will be created to turn on and off the best fit algorithm.  We will also create a kernel module that uses kalloc and kfree to allocate and free a large amount of memory --- this is done so that the slab will have a large amount of use.  All of these components will then be orchestrated using a bash script to test the fragmentation ratio of each algorithm multiple times and display the results to the user.
+
+\section{Questions}
+\subsection{What do you think the main point of this assignment is?}
+The main point of this assignment is to further increase our understanding of how memory management is handled. Furthermore, this assignment helps us to recognize the importance of system calls, and how to implement non-native system calls to a personalized linux kernel. And lastly, that best fit is awful, and slower than molasses.
+
+\subsection{How did you personally approach the problem? Design decisions, algorithm, etc.}
+Well, we were supposed to use best fit, but that was super slow and we didn’t like it. So, we enabled a system call that would switch which slob allocation algorithm would be used which allowed us to boot with first-fit then during run time switch to best-fit. The algorithm we decided to use can be seen in the design section of this write-up.
+
+\subsection{How did you ensure your solution was correct? Testing details, for instance.}
+
+\begin{enumerate}
+    \item Move to the kernel base path.
+    \begin{lstlisting}
+    cd <kernel_base_path>
+    \end{lstlisting}
+
+    \item Apply provided patch to kernel
+    
+    \item Run make menu config to set the slab instance to slob.
+    \begin{lstlisting}
+    make menuconfig
+    \end{lstlisting}
+    
+    \item In the menu config navigate to: 
+    \begin{lstlisting}
+    General setup -> Choose SLAB allocator (<current instance>)
+    \end{lstlisting}
+    
+    \item From the list of instances select:
+    \begin{lstlisting}
+    SLOB (Simple Allocator)
+    \end{lstlisting}
+    
+    \item Save to .config, then exit the menu config.
+    
+    \item Compile the kernel.
+    \begin{lstlisting}
+    make -j4 all
+    \end{lstlisting}
+    
+    \item In a new terminal run the VM.
+    \begin{lstlisting}
+    source <environment_file>
+    qemu-system-i386 -redir tcp:5532::22 -nographic -kernel linux-yocto-3.19/arch/x86/boot/bzImage -drive file=core-image-lsb-sdk-qemux86.ext4 -enable-kvm -usb -localtime --no-reboot --append "root=/dev/hda rwconsole=ttyS0 debug"
+    \end{lstlisting}
+    
+    \item In the VM, log in as ``root`` and remove all current files.
+    \begin{lstlisting}
+    rm *
+    \end{lstlisting}
+    
+	\item In the terminal used to compile the kernel load the files into to VM with the provided script (this compiles the kernel module and uses scp to move all the appropriate files to the VM on port 5532 --- our group's port number that the VM is running on).
+	\begin{lstlisting}
+    cd hw4
+    chmod +x loadFiles.sh
+    ./loadFiles.sh
+	\end{lstlisting}
+	
+	\item Back in the VM run the test script to compare fragmentation variables (this will automatically switch between the First Fit and Best Fit algorithms).
+	\begin{lstlisting}
+    chmod +x testScript.sh
+    ./testScript.sh
+	\end{lstlisting}
+	
+	\item The script above uses system calls to calculate the free and total space as well as to switch which algorithm is being used.  To manually switch the algorithm (after running the testScirpt.sh --- as that compiles the c files) you may run the below in the VM:
+	\begin{lstlisting}
+    # To set algorithm to Best Fit
+    ./setBestFit
+	
+    # To set algorithm to First Fit
+    ./setFirstFit
+    
+    # To calculate current fragmentation ratio
+    ./fragCalc
+	\end{lstlisting}
+	
+	\item We are allocating and freeing memory using kmalloc and kfree in the linux module that was compiled.  This can be done manually in the VM using:
+	\begin{lstlisting}
+    # Load the module (will malloc and free large amounts of memory)
+    insmod mod.ko
+	
+    # Check to make sure module is loaded
+    lsmod
+	
+    # Remove the module (so that is can be reloaded to malloc and free again)
+    rmmod mod.ko
+	\end{lstlisting}
+
+\end{enumerate}
+
+\subsection{What did you learn?}
+We learned a lot about memory management. More importantly, the importance of choosing the best possible algorithm for both time and memory usage. Moreover, we learned the importance of getting system calls correct to make sure the functions we are using are being actually called, and that the slob/slab allocator can, and needs to be, changed in the kconfig file.
+
+
+\section{Git Log}
+
+This is our git log for the work completed on the kernel and write-up.
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|p{8cm}| }
+	    \hline
+	    \textbf{Date} & \textbf{Author} & \textbf{Description}\\\hline
+	    2018-05-30 19:23:10 -0700 & Brennan Douglas & committed design document\\\hline
+		2018-05-30 20:02:47 -0700 & Brennan Douglas & set up syscalls + test script\\\hline
+        2018-05-30 21:14:13 -0700 & Brennan Douglas & initial best fit algorthim\\\hline
+        2018-05-30 21:15:29 -0700 & Brennan Douglas & updated local version number\\\hline
+        2018-05-30 22:11:36 -0700 & Brennan Douglas & added system call and configured config\\\hline
+        2018-05-30 22:21:45 -0700 & Brennan Douglas & added rutime algorithm switching\\\hline
+        2018-05-30 22:34:36 -0700 & Brennan Douglas & corrected type error\\\hline
+        2018-05-30 23:02:00 -0700 & Brennan Douglas & changed printk to debug\\\hline
+        2018-05-30 23:08:53 -0700 & Brennan Douglas & added vm test scripts\\\hline
+        2018-05-30 23:09:01 -0700 & Brennan Douglas & Merge branch 'hw4' of /scratch/spring2018/32/linux-yocto-3.19 into hw4\\\hline
+        2018-05-30 23:11:18 -0700 & Brennan Douglas & fixed printk debug\\\hline
+        2018-05-30 23:22:44 -0700 & Brennan Douglas & removed printk\\\hline
+        2018-05-30 23:34:43 -0700 & Brennan Douglas & finalized test script\\\hline
+        2018-05-30 23:43:19 -0700 & Brennan Douglas & fixed slob alloc algorithm error\\\hline
+        2018-05-30 23:58:04 -0700 & Brennan Douglas & added test print statement\\\hline
+        2018-05-31 00:11:08 -0700 & Brennan Douglas & removed NULL pointer set\\\hline
+        2018-05-31 00:14:24 -0700 & Brennan Douglas & removed print statment\\\hline
+        2018-05-31 08:59:22 -0700 & Brennan Douglas & fixed gapping slob error\\\hline
+        2018-05-31 09:13:02 -0700 & Brennan Douglas & removed useless for blocks from testScript\\\hline
+        2018-05-31 09:16:51 -0700 & Brennan Douglas & added blocks back\\\hline
+        2018-06-06 07:27:36 -0700 & Nicholas Giles  & commited writeup\\\hline
+	\end{tabular}
+\end{center}
+
+\section{Work Log}
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|p{12cm}| }
+	    \hline
+	    \textbf{Date} & \textbf{Name} & \textbf{Hours} & \textbf{Description}\\\hline
+	    5/30/2018   & Cooper Hutchins   & 2 & Worked on how the First Fit algorithm worked in existing slob.c\\\hline
+	    5/30/2018   & Nicholas Giles    & 2 & Worked on how the First Fit algorithm worked in existing slob.c, and wrote the design document.\\\hline
+	    5/30/2018   & Brennan Douglas   & 5 & Researched and programmed the Best Fit algorithm + programmed the kernel module, system calls, and test scripts.\\\hline
+	    5/31/2018   & Brennan Douglas   & 2 & Resolved errors in the algorithm that were held over from yesterday + completed command list for write-up, and the work + git logs.\\\hline
+	    6/06/2018   & Cooper Hutchins   & 1 & Worked on the writeup\\\hline
+	    6/06/2018   & Nicholas Giles    & 1 & Worked on the writeup\\\hline
+	    6/06/2018   & Brennan Douglas   & 1 & Worked on the writeup\\\hline
+    \end{tabular}
+\end{center}
+
+\bibliographystyle{IEEEtran}
+\bibliography{./ref}
+
+\end{document}
